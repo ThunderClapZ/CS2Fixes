@@ -126,6 +126,9 @@ GAME_EVENT_F(player_spawn)
 	if (!pController)
 		return;
 
+	CServerSideClient *pClient = pController->GetServerSideClient();
+	pClient->ForceFullUpdate();
+
 	ZEPlayer* pPlayer = pController->GetZEPlayer();
 
 	// always reset when player spawns
