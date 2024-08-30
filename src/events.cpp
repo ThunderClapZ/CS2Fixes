@@ -206,6 +206,17 @@ GAME_EVENT_F(player_death)
 	CCSPlayerController *pAttacker = (CCSPlayerController*)pEvent->GetPlayerController("attacker");
 	CCSPlayerController *pVictim = (CCSPlayerController*)pEvent->GetPlayerController("userid");
 	
+	if (pVictim)
+	{
+		CServerSideClient *pClient = pVictim->GetServerSideClient();
+		pClient->ForceFullUpdate();
+	}
+	if (pAttacker)
+	{
+		CServerSideClient *pClient = pAttacker->GetServerSideClient();
+		pClient->ForceFullUpdate();
+	}
+	
 	//Ignore Ts/zombie kills and ignore CT teamkilling or suicide
 	if (!pAttacker || !pVictim || pAttacker->m_iTeamNum != CS_TEAM_CT || pAttacker->m_iTeamNum == pVictim->m_iTeamNum)
 		return;
