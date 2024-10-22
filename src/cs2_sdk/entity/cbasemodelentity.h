@@ -32,7 +32,8 @@ public:
 	SCHEMA_FIELD(Color, m_clrRender)
 	SCHEMA_FIELD(RenderMode_t, m_nRenderMode)
 	SCHEMA_FIELD(float, m_flDissolveStartTime)
-	
+	SCHEMA_FIELD(Vector, m_vecViewOffset)
+
 	void SetModel(const char *szModel)
 	{
 		addresses::CBaseModelEntity_SetModel(this, szModel);
@@ -40,12 +41,18 @@ public:
 
 	void SetCollisionGroup(StandardCollisionGroups_t nCollisionGroup)
 	{
-		m_Collision().m_CollisionGroup = COLLISION_GROUP_DEBRIS;
+		m_Collision().m_CollisionGroup = static_cast<uint8>(nCollisionGroup);
 		CollisionRulesChanged();
 	}
 	
 	const char* GetModelName()
 	{
 		return ((CSkeletonInstance*)m_CBodyComponent->m_pSceneNode.Get())->m_modelState().m_ModelName.Get().String();
+	}
+
+	Vector GetEyePosition()
+	{
+		const auto x = m_vecViewOffset();
+		return x + GetAbsOrigin();
 	}
 };

@@ -21,6 +21,7 @@
 #include "KeyValues.h"
 #include "commands.h"
 #include "ctimer.h"
+#include "entities.h"
 #include "eventlistener.h"
 #include "networkstringtabledefs.h"
 #include "entity/cbaseplayercontroller.h"
@@ -100,6 +101,14 @@ GAME_EVENT_F(round_prestart)
 		}
 	}
 
+	EntityHandler_OnRoundRestart();
+
+	CBaseEntity* pShake = nullptr;
+
+	// Prevent shakes carrying over from previous rounds
+	while ((pShake = UTIL_FindEntityByClassname(pShake, "env_shake")))
+		pShake->AcceptInput("StopShake");
+
 	if (g_bEnableZR)
 		ZR_OnRoundPrestart(pEvent);
 }
@@ -117,7 +126,7 @@ GAME_EVENT_F(player_team)
 
 static bool g_bNoblock = false;
 
-FAKE_BOOL_CVAR(cs2f_noblock_enable, "Whether to use noblock, which sets debris collision on every player", g_bNoblock, false, false)
+FAKE_BOOL_CVAR(cs2f_noblock_enable, "Whether to use player noblock, which sets debris collision on every player", g_bNoblock, false, false)
 
 GAME_EVENT_F(player_spawn)
 {
